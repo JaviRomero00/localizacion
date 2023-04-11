@@ -1,3 +1,3 @@
 <?php
-$con = pg_connect("host=localhost dbname=agenda user=agenda password=agenda");
+$con = pg_connect("host=localhost dbname=localizacion user=localizacion password=localizacion");
 ?>

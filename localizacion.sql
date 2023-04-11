@@ -22,7 +22,7 @@ CREATE TABLE trabajadores (
     puesto      varchar(255)    NOT NULL,
     plaza       varchar(255)    NOT NULL,
     controlador bool            NOT NULL
-)
+);
 
 CREATE TABLE incidencias (
     trabajador_id   bigserial       NOT NULL REFERENCES trabajadores (id),
@@ -32,4 +32,10 @@ CREATE TABLE incidencias (
     longitud        float           NOT NULL,
     latitud         float           NOT NULL,
     produccion      varchar(255)    NOT NULL
-)
+);
+
+INSERT INTO usuarios (usuario, contrasena, rol)
+     VALUES (md5('javi'), md5('javi'), 'admin');
+
+INSERT INTO usuarios (usuario, contrasena, rol)
+     VALUES (md5('normal'), md5('normal'), 'normal');
