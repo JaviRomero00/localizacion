@@ -74,23 +74,23 @@
             $plaza = $_POST['plaza'];
             $controlador = $_POST['controlador'];
 
-            if (preg_match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i', $_POST['dni']) &&
+            if (preg_match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]+$/', $_POST['dni']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['nombre']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['apellidos']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['direccion']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['poblacion']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['provincia']) &&
-            preg_match('/^[0-9]{8}$/i', $_POST['cp']) &&
+            preg_match('/^[0-9]{5}+$/', $_POST['cp']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['puesto']) &&
             preg_match('/^[a-zA-Z\s]+$/', $_POST['plaza'])) {
                 $query = "INSERT INTO trabajadores (dni, nombre, apellidos,
-                         direccion, poblacion, provincia, cp, puesta, plaza, controlador)
+                         direccion, poblacion, provincia, cp, puesto, plaza, controlador)
                             VALUES ('$dni', '$nombre', '$apellidos', '$direccion',
                             '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
                             '$controlador') RETURNING id;";
 
                 $consulta = "SELECT * FROM contactos
-                            WHERE telefono = '$telefono';";
+                            WHERE dni = '$dni';";
 
                 $res = pg_query($con, $consulta);
 
@@ -100,8 +100,8 @@
                 } else {
                     echo "<div class='error'>Error al guardar el contacto, el teléfono ya esta registrado</div>";
                 }
-            } if (!preg_match('/^[a-zA-Z\s]+$/', $_POST['nombre']) || !preg_match('/[[:digit:]]/', $_POST['telefono'])){
-                echo "<div class='error'>Error al guardar el contacto, algunos caracteres no son validos</div>";
+            } else {
+                echo 'fallo';
             }
             pg_close($con);
         ?>
