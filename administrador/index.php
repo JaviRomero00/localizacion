@@ -15,7 +15,7 @@
         }
         else if (time() - $_SESSION['tiempo'] > 180) {
             session_destroy();
-            header("Location: login.php");
+            header("Location: ../login.php");
             die();
         }
         $_SESSION['tiempo'] = time();

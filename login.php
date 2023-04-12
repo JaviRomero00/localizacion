@@ -44,17 +44,7 @@
                         if(pg_num_rows($resultado) == 1) {
                             $_SESSION['intentos'] = 0;
                             $_SESSION['user'] = $user;
-                            $q = "SELECT rol FROM usuarios
-                                  WHERE usuario = '$user';";
-                            $r = pg_query($con, $q);
-                            $fila = pg_fetch_assoc($r);
-                            $rol = $fila['rol'];
-                            if ($rol == 'admin') {
-                                $_SESSION['rol'] = $rol;
-                                header("Location: administrador/index.php");
-                            } else {
-                                header("Location: index.php");
-                            }
+                            header("Location: gestiones.php");
                         } else {
                             if (!isset($_SESSION['intentos'])) {
                                 $_SESSION['intentos'] = 0;
