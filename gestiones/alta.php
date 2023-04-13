@@ -26,7 +26,7 @@
         ?>
 
             <h1>Dar de Alta a un trabajador</h1>
-            <form action="index.php" method="POST">
+            <form action="alta.php" method="POST">
                 <label for="dni">DNI:</label>
                 <input type="text" name="dni" required>
                 <br>
@@ -89,16 +89,16 @@
                             '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
                             '$controlador') RETURNING id;";
 
-                $consulta = "SELECT * FROM contactos
+                $consulta = "SELECT * FROM trabajadores
                             WHERE dni = '$dni';";
 
                 $res = pg_query($con, $consulta);
 
                 if (pg_num_rows($res) == 0) {
                     pg_query($con, $query);
-                    echo "<div class='aceptar'>Contacto guardado correctamente</div>";
+                    echo "<div class='aceptar'>Trabajador guardado correctamente</div>";
                 } else {
-                    echo "<div class='error'>Error al guardar el contacto, el teléfono ya esta registrado</div>";
+                    echo "<div class='error'>Error al guardar el trabajador, el trabajador ya esta registrado</div>";
                 }
             } else {
                 echo 'fallo';
