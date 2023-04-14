@@ -31,7 +31,14 @@ CREATE TABLE incidencias (
     controlador_id  bigserial       NOT NULL REFERENCES trabajadores (id),
     longitud        float           NOT NULL,
     latitud         float           NOT NULL,
-    produccion      varchar(255)    NOT NULL
+    produccion      varchar(255)    NOT NULL,
+    CONSTRAINT fk_controlador_id CHECK (
+        EXISTS (
+            SELECT 1 FROM trabajadores
+            WHERE trabajadores.id = incidencias.controlador.id
+            AND trabajadores.controlador = true
+        )
+    )
 );
 
 INSERT INTO usuarios (usuario, contrasena, rol)

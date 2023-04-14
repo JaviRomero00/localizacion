@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dar de alta</title>
 </head>
 <body>
     <div class="formulario">
@@ -23,10 +23,121 @@
             header('Location: ../login.php');
             exit;
         } else {
-        ?>
+            require ('conexion.php');
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                if (isset($_POST['dni']) && isset($_POST['nombre']) && isset($_POST['apellidos'])
+                && isset($_POST['direccion']) && isset($_POST['poblacion']) && isset($_POST['provincia'])
+                && isset($_POST['cp']) && isset($_POST['puesto']) && isset($_POST['plaza'])) {
+                    $dni = $_POST['dni'];
+                    $nombre   = $_POST['nombre'];
+                    $apellidos = $_POST['apellidos'];
+                    $direccion = $_POST['direccion'];
+                    $poblacion = $_POST['poblacion'];
+                    $provincia = $_POST['provincia'];
+                    $cp = $_POST['cp'];
+                    $puesto = $_POST['puesto'];
+                    $plaza = $_POST['plaza'];
 
-            <h1>Dar de Alta a un trabajador</h1>
-            <form action="alta.php" method="POST">
+                    $clases_label = [];
+                    $clases_input = [];
+                    $error = ['dni' => [], 'nombre' => [], 'apellidos' => [], 'direccion' => [],
+                    'poblacion' => [], 'provincia' => [], 'cp' => [], 'puesto' => [], 'plaza' => []];
+
+                    foreach (['dni', 'nombre', 'apellidos', 'direccion', 'poblacion',
+                    'provincia', 'cp', 'puesto', 'plaza'] as $e) {
+                        $clases_label[$e] = '';
+                        $clases_input[$e] = '';
+                    }
+
+                    $query = "SELECT * FROM trabajadores
+                              WHERE dni = '$dni';";
+                    $resultado = pg_query($con, $query);
+
+                    if (isset($dni, $nombre, $apellidos,
+                    $direccion, $poblacion, $provincia, $cp, $puesto, $plaza)) {
+                        if ($_POST['dni'] == '') {
+                            $error['dni'][] = 'El dni del trabajador es obligatorio.';
+                        }else if(pg_num_rows($resultado) == 1) {
+                            $error['dni'][] = "El trabajador ya esta dado de alta.";
+                        } else if (preg_match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i', $_POST['dni']) !== 1) {
+                            $error['dni'][] = "El dni no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['nombre'] == '') {
+                            $error['nombre'][] = 'El nombre del trabajador es obligatorio.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['nombre']) !== 1) {
+                            $error['nombre'][] = "El nombre no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['apellidos'] == '') {
+                            $error['apellidos'][] = 'Los apellidos del trabajador son obligatorio.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['apellidos']) !== 1) {
+                            $error['apellidos'][] = "Los apellidos no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['direccion'] == '') {
+                            $error['direccion'][] = 'La dirección del trabajador es obligatoria.';
+                        } else if (preg_match('/^[a-zA-Z0-9\s]+$/', $_POST['direccion']) !== 1) {
+                            $error['direccion'][] = "La dirección no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['poblacion'] == '') {
+                            $error['poblacion'][] = 'La población del trabajador es obligatoria.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['poblacion']) !== 1) {
+                            $error['poblacion'][] = "La población no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['provincia'] == '') {
+                            $error['provincia'][] = 'La provincia del trabajador es obligatoria.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['provincia']) !== 1) {
+                            $error['provincia'][] = "La provincia no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['cp'] == '') {
+                            $error['cp'][] = 'El codigo postal del trabajador es obligatorio.';
+                        } else if (preg_match('/^[0-9]{5}+$/', $_POST['cp']) !== 1) {
+                            $error['cp'][] = "El codigo postal no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['puesto'] == '') {
+                            $error['puesto'][] = 'El puesto del trabajador es obligatorio.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['puesto']) !== 1) {
+                            $error['puesto'][] = "El puesto no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['plaza'] == '') {
+                            $error['plaza'][] = 'La plaza del trabajador es obligatoria.';
+                        } else if (preg_match('/^[a-zA-Z\s]+$/', $_POST['plaza']) !== 1) {
+                            $error['plaza'][] = "La plaza no se encuentra en el formato correcto.";
+                        }
+
+                        if ($_POST['controlador'] == 'si'){
+                            $controlador = true;
+                        } else if ($_POST['controlador'] == 'no'){
+                            $controlador = false;
+                        }
+
+                        $vacio = true;
+
+                        foreach ($error as $err) {
+                            if (!empty($err)) {
+                                $vacio = false;
+                                break;
+                            }
+                        }
+
+                        if ($vacio) {
+                            $registrar = "INSERT INTO usuarios (usuario, contrasena)
+                                        VALUES ('$user', '$password')";
+                            pg_query($con, $registrar);
+                            header('Location: login.php');
+                        }
+                    }
+                }
+            }
+        } ?>
+        <h1>Dar de Alta a un trabajador</h1>
+            <form action="" method="POST">
                 <label for="dni">DNI:</label>
                 <input type="text" name="dni" required>
                 <br>
@@ -55,56 +166,11 @@
                 <input type="text" name="plaza" required>
                 <br>
                 <label for="controlador">CONTROLADOR:</label>
-                <input type="radio" name="controlador" value=true required> Sí
-                <input type="radio" name="controlador" value=false required> No
+                <input type="radio" name="controlador" value="si" required> Sí
+                <input type="radio" name="controlador" value="no" required> No
                 <br>
                 <input type="submit" value="Guardar">
             </form>
-        <?php } ?>
-        <?php
-            require 'conexion.php';
-            $dni = $_POST['dni'];
-            $nombre   = $_POST['nombre'];
-            $apellidos = $_POST['apellidos'];
-            $direccion = $_POST['direccion'];
-            $poblacion = $_POST['poblacion'];
-            $provincia = $_POST['provincia'];
-            $cp = $_POST['cp'];
-            $puesto = $_POST['puesto'];
-            $plaza = $_POST['plaza'];
-            $controlador = $_POST['controlador'];
-
-            if (preg_match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]+$/', $_POST['dni']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['nombre']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['apellidos']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['direccion']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['poblacion']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['provincia']) &&
-            preg_match('/^[0-9]{5}+$/', $_POST['cp']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['puesto']) &&
-            preg_match('/^[a-zA-Z\s]+$/', $_POST['plaza'])) {
-                $query = "INSERT INTO trabajadores (dni, nombre, apellidos,
-                         direccion, poblacion, provincia, cp, puesto, plaza, controlador)
-                            VALUES ('$dni', '$nombre', '$apellidos', '$direccion',
-                            '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
-                            '$controlador') RETURNING id;";
-
-                $consulta = "SELECT * FROM trabajadores
-                            WHERE dni = '$dni';";
-
-                $res = pg_query($con, $consulta);
-
-                if (pg_num_rows($res) == 0) {
-                    pg_query($con, $query);
-                    echo "<div class='aceptar'>Trabajador guardado correctamente</div>";
-                } else {
-                    echo "<div class='error'>Error al guardar el trabajador, el trabajador ya esta registrado</div>";
-                }
-            } else {
-                echo 'fallo';
-            }
-            pg_close($con);
-        ?>
     </div>
 </body>
 </html>

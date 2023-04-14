@@ -22,15 +22,17 @@
             header('Location: login.php');
             exit;
         }
-        echo 'buenas tardes';
         require 'conexion.php';
         $actual = $_SESSION['user'];
         $query = "SELECT rol FROM usuarios WHERE usuario = '$actual';";
-        $resultado = pg_query_params($con, $query, array($actual));
-        $rol = pg_fetch_result($resultado, 0, 'rol');
-        echo $rol;
-        if ($rol == 'admin') {
-            echo 'hola administrador';
+        $resultado = pg_query($con, $query);
+        $rol = pg_fetch_assoc($resultado);
+        if ($rol['rol'] == 'admin') {
+            echo '<h1>hola administrador que gestion desea hacer: </h1>';
+            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Dar de alta a un nuevo trabajador</button> <br> <br>';
+            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Dar de baja a un trabajador</button> <br> <br>';
+            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Consultar datos de un trabajador</button> <br> <br>';
+            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Modificar datos de un trabajador</button>';
         }
         else {
             echo 'hola no administrador';

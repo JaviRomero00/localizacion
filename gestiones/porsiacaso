@@ -1,0 +1,48 @@
+ <?php
+            require 'conexion.php';
+            $dni = $_POST['dni'];
+            $nombre   = $_POST['nombre'];
+            $apellidos = $_POST['apellidos'];
+            $direccion = $_POST['direccion'];
+            $poblacion = $_POST['poblacion'];
+            $provincia = $_POST['provincia'];
+            $cp = $_POST['cp'];
+            $puesto = $_POST['puesto'];
+            $plaza = $_POST['plaza'];
+
+            if (preg_match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]+$/', $_POST['dni']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['nombre']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['apellidos']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['direccion']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['poblacion']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['provincia']) &&
+            preg_match('/^[0-9]{5}+$/', $_POST['cp']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['puesto']) &&
+            preg_match('/^[a-zA-Z\s]+$/', $_POST['plaza'])) {
+                if ($_POST['controlador'] == 'si'){
+                    $controlador = true;
+                } else{
+                    $controlador = false;
+                }
+                $query = "INSERT INTO trabajadores (dni, nombre, apellidos,
+                         direccion, poblacion, provincia, cp, puesto, plaza, controlador)
+                            VALUES ('$dni', '$nombre', '$apellidos', '$direccion',
+                            '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
+                            '$controlador') RETURNING id;";
+
+                $consulta = "SELECT * FROM trabajadores
+                            WHERE dni = '$dni';";
+
+                $res = pg_query($con, $consulta);
+
+                if (pg_num_rows($res) == 0) {
+                    pg_query($con, $query);
+                    echo "<div class='aceptar'>Trabajador guardado correctamente</div>";
+                } else {
+                    echo "<div class='error'>Error al guardar el trabajador, el trabajador ya esta registrado</div>";
+                }
+            } else {
+                echo 'fallo';
+            }
+            pg_close($con);
+        ?>
