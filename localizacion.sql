@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS usuarios CASCADE;
 DROP TABLE IF EXISTS trabajadores CASCADE;
 DROP TABLE IF EXISTS incidencias CASCADE;
+DROP FUNCTION IF EXISTS check_trabajadores_controlador_exists CASCADE;
 
 
 CREATE TABLE usuarios (
@@ -21,8 +22,16 @@ CREATE TABLE trabajadores (
     cp          char(5)         NOT NULL,
     puesto      varchar(255)    NOT NULL,
     plaza       varchar(255)    NOT NULL,
-    controlador bool            NOT NULL
+    controlador boolean         NOT NULL
 );
+
+CREATE FUNCTION check_trabajadores_controlador_exists(id BIGINT, controlador BOOLEAN) RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM trabajadores WHERE id = $1 AND controlador = $2
+    );
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE TABLE incidencias (
     trabajador_id   bigserial       NOT NULL REFERENCES trabajadores (id),
@@ -32,12 +41,8 @@ CREATE TABLE incidencias (
     longitud        float           NOT NULL,
     latitud         float           NOT NULL,
     produccion      varchar(255)    NOT NULL,
-    CONSTRAINT fk_controlador_id CHECK (
-        EXISTS (
-            SELECT 1 FROM trabajadores
-            WHERE trabajadores.id = incidencias.controlador.id
-            AND trabajadores.controlador = true
-        )
+    CONSTRAINT trabajadores_controlador_check CHECK (
+        check_trabajadores_controlador_exists(trabajador_id::BIGINT, true::BOOLEAN)
     )
 );
 

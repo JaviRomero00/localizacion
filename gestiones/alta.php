@@ -27,7 +27,8 @@
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if (isset($_POST['dni']) && isset($_POST['nombre']) && isset($_POST['apellidos'])
                 && isset($_POST['direccion']) && isset($_POST['poblacion']) && isset($_POST['provincia'])
-                && isset($_POST['cp']) && isset($_POST['puesto']) && isset($_POST['plaza'])) {
+                && isset($_POST['cp']) && isset($_POST['puesto']) && isset($_POST['plaza'])
+                && isset($_POST['controlador'])) {
                     $dni = $_POST['dni'];
                     $nombre   = $_POST['nombre'];
                     $apellidos = $_POST['apellidos'];
@@ -37,14 +38,16 @@
                     $cp = $_POST['cp'];
                     $puesto = $_POST['puesto'];
                     $plaza = $_POST['plaza'];
+                    $controlador = $_POST['controlador'];
 
                     $clases_label = [];
                     $clases_input = [];
                     $error = ['dni' => [], 'nombre' => [], 'apellidos' => [], 'direccion' => [],
-                    'poblacion' => [], 'provincia' => [], 'cp' => [], 'puesto' => [], 'plaza' => []];
+                    'poblacion' => [], 'provincia' => [], 'cp' => [], 'puesto' => [], 'plaza' => [],
+                    'controlador' =>[]];
 
                     foreach (['dni', 'nombre', 'apellidos', 'direccion', 'poblacion',
-                    'provincia', 'cp', 'puesto', 'plaza'] as $e) {
+                    'provincia', 'cp', 'puesto', 'plaza', 'contorlador'] as $e) {
                         $clases_label[$e] = '';
                         $clases_input[$e] = '';
                     }
@@ -54,7 +57,7 @@
                     $resultado = pg_query($con, $query);
 
                     if (isset($dni, $nombre, $apellidos,
-                    $direccion, $poblacion, $provincia, $cp, $puesto, $plaza)) {
+                    $direccion, $poblacion, $provincia, $cp, $puesto, $plaza, $controlador)) {
                         if ($_POST['dni'] == '') {
                             $error['dni'][] = 'El dni del trabajador es obligatorio.';
                         }else if(pg_num_rows($resultado) == 1) {
@@ -127,47 +130,55 @@
                         }
 
                         if ($vacio) {
-                            $registrar = "INSERT INTO usuarios (usuario, contrasena)
-                                        VALUES ('$user', '$password')";
+                            $registrar = "INSERT INTO trabajadores (dni, nombre, apellidos,
+                            direccion, poblacion, provincia, cp, puesto, plaza, controlador)
+                                        VALUES ('$dni', '$nombre', '$apellidos', '$direccion',
+                                        '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
+                                        '$controlador') RETURNING id;";
                             pg_query($con, $registrar);
-                            header('Location: login.php');
+                            echo 'registrado con exito';
                         }
                     }
                 }
             }
-        } ?>
+        }
+        ?>
         <h1>Dar de Alta a un trabajador</h1>
             <form action="" method="POST">
-                <label for="dni">DNI:</label>
-                <input type="text" name="dni" required>
+                <label for="dni" class="<?= $clases_label['dni'] ?>">DNI:</label>
+                <input type="text" name="dni" id="dni" class="<?= $clases_input['dni'] ?>">
+                <?php foreach ($error['dni'] as $err): ?>
+                    <p><span class="font-bold">Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
-                <label for="nombre">NOMBRE:</label>
-                <input type="text" name="nombre" required>
+
+                <label for="nombre" class="<?= $clases_label['nombre'] ?>">NOMBRE:</label>
+                <input type="text" name="nombre" id="nombre" class="<?= $clases_input['nombre'] ?>">
                 <br>
-                <label for="apellidos">APELLIDOS:</label>
-                <input type="text" name="apellidos" required>
+                <label for="apellidos" class="<?= $clases_label['apellidos'] ?>">APELLIDOS:</label>
+                <input type="text" name="apellidos" id="apellidos" class="<?= $clases_input['apellidos'] ?>">
                 <br>
-                <label for="direccion">DIRECCIÓN:</label>
-                <input type="text" name="direccion" required>
+                <label for="direccion" class="<?= $clases_label['direccion'] ?>">DIRECCIÓN:</label>
+                <input type="text" name="direccion" id="direccion" class="<?= $clases_input['direccion'] ?>">
                 <br>
-                <label for="poblacion">POBLACIÓN:</label>
-                <input type="text" name="poblacion" required>
+                <label for="poblacion" class="<?= $clases_label['poblacion'] ?>">POBLACIÓN:</label>
+                <input type="text" name="poblacion" id="poblacion" class="<?= $clases_input['poblacion'] ?>">
                 <br>
-                <label for="provincia">PROVINCIA:</label>
-                <input type="text" name="provincia" required>
+                <label for="provincia" class="<?= $clases_label['provincia'] ?>">PROVINCIA:</label>
+                <input type="text" name="provincia" id="provincia" class="<?= $clases_input['provincia'] ?>">
                 <br>
-                <label for="cp">CODIGO POSTAL:</label>
-                <input type="text" name="cp" required>
+                <label for="cp" class="<?= $clases_label['cp'] ?>">CODIGO POSTAL:</label>
+                <input type="text" name="cp" id="cp" class="<?= $clases_input['cp'] ?>">
                 <br>
-                <label for="puesto">PUESTO:</label>
-                <input type="text" name="puesto" required>
+                <label for="puesto" class="<?= $clases_label['puesto'] ?>">PUESTO:</label>
+                <input type="text" name="puesto" id="puesto" class="<?= $clases_input['puesto'] ?>">
                 <br>
-                <label for="plaza">PLAZA:</label>
-                <input type="text" name="plaza" required>
+                <label for="plaza" class="<?= $clases_label['plaza'] ?>">PLAZA:</label>
+                <input type="text" name="plaza" id="plaza" class="<?= $clases_input['plaza'] ?>">
                 <br>
-                <label for="controlador">CONTROLADOR:</label>
-                <input type="radio" name="controlador" value="si" required> Sí
-                <input type="radio" name="controlador" value="no" required> No
+                <label for="controlador" class="<?= $clases_label['controlador'] ?>">CONTROLADOR:</label>
+                <input type="radio" name="controlador" value="si" id="controlador" class="<?= $clases_input['controlador'] ?>"> Sí
+                <input type="radio" name="controlador" value="no" id="controlador" class="<?= $clases_input['controlador'] ?>"> No
                 <br>
                 <input type="submit" value="Guardar">
             </form>
