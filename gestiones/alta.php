@@ -23,7 +23,7 @@
             header("Location: ../login.php");
             exit;
         } else {
-            require ('conexion.php');
+            require '../conexion.php';
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if (isset($_POST['dni']) && isset($_POST['nombre']) && isset($_POST['apellidos'])
                 && isset($_POST['direccion']) && isset($_POST['poblacion']) && isset($_POST['provincia'])
@@ -114,10 +114,12 @@
                             $error['plaza'][] = "La plaza no se encuentra en el formato correcto.";
                         }
 
-                        if ($_POST['controlador'] == 'si'){
+                        if ($_POST['controlador'] == 'si') {
                             $controlador = true;
-                        } else if ($_POST['controlador'] == 'no'){
+                        } else if ($_POST['controlador'] == 'no') {
                             $controlador = false;
+                        } else {
+                            $error['controlador'][] = "Debes marcar una opción valida.";
                         }
 
                         $vacio = true;
@@ -148,45 +150,72 @@
                 <label for="dni" class="<?= $clases_label['dni'] ?>">DNI:</label>
                 <input type="text" name="dni" id="dni" class="<?= $clases_input['dni'] ?>">
                 <?php foreach ($error['dni'] as $err): ?>
-                    <p><span class="font-bold">Error!! <?= $err ?></p>
+                    <p><span>Error!! <?= $err ?></p>
                 <?php endforeach ?>
                 <br>
 
                 <label for="nombre" class="<?= $clases_label['nombre'] ?>">NOMBRE:</label>
                 <input type="text" name="nombre" id="nombre" class="<?= $clases_input['nombre'] ?>">
+                <?php foreach ($error['nombre'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="apellidos" class="<?= $clases_label['apellidos'] ?>">APELLIDOS:</label>
                 <input type="text" name="apellidos" id="apellidos" class="<?= $clases_input['apellidos'] ?>">
+                <?php foreach ($error['apellidos'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="direccion" class="<?= $clases_label['direccion'] ?>">DIRECCIÓN:</label>
                 <input type="text" name="direccion" id="direccion" class="<?= $clases_input['direccion'] ?>">
+                <?php foreach ($error['direccion'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="poblacion" class="<?= $clases_label['poblacion'] ?>">POBLACIÓN:</label>
                 <input type="text" name="poblacion" id="poblacion" class="<?= $clases_input['poblacion'] ?>">
+                <?php foreach ($error['poblacion'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="provincia" class="<?= $clases_label['provincia'] ?>">PROVINCIA:</label>
                 <input type="text" name="provincia" id="provincia" class="<?= $clases_input['provincia'] ?>">
+                <?php foreach ($error['provincia'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="cp" class="<?= $clases_label['cp'] ?>">CODIGO POSTAL:</label>
                 <input type="text" name="cp" id="cp" class="<?= $clases_input['cp'] ?>">
+                <?php foreach ($error['cp'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="puesto" class="<?= $clases_label['puesto'] ?>">PUESTO:</label>
                 <input type="text" name="puesto" id="puesto" class="<?= $clases_input['puesto'] ?>">
+                <?php foreach ($error['puesto'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="plaza" class="<?= $clases_label['plaza'] ?>">PLAZA:</label>
                 <input type="text" name="plaza" id="plaza" class="<?= $clases_input['plaza'] ?>">
+                <?php foreach ($error['plaza'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <label for="controlador" class="<?= $clases_label['controlador'] ?>">CONTROLADOR:</label>
                 <input type="radio" name="controlador" value="si" id="controlador" class="<?= $clases_input['controlador'] ?>"> Sí
                 <input type="radio" name="controlador" value="no" id="controlador" class="<?= $clases_input['controlador'] ?>"> No
+                <?php foreach ($error['controlador'] as $err): ?>
+                    <p><span>Error!! <?= $err ?></p>
+                <?php endforeach ?>
                 <br>
 
                 <input type="submit" value="Guardar">

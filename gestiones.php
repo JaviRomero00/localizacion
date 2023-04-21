@@ -30,9 +30,9 @@
         if ($rol['rol'] == 'admin') {
             echo '<h1>hola administrador que gestion desea hacer: </h1>';
             echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Dar de alta a un nuevo trabajador</button> <br> <br>';
-            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Dar de baja a un trabajador</button> <br> <br>';
-            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Consultar datos de un trabajador</button> <br> <br>';
-            echo '<button type="button" onclick="location.href=\'gestiones/alta.php\'">Modificar datos de un trabajador</button>';
+            echo '<button type="button" onclick="location.href=\'gestiones/baja.php\'">Dar de baja a un trabajador</button> <br> <br>';
+            echo '<button type="button" onclick="location.href=\'gestiones/consulta.php\'">Consultar datos de un trabajador</button> <br> <br>';
+            echo '<button type="button" onclick="location.href=\'gestiones/modificacion.php\'">Modificar datos de un trabajador</button>';
         }
         else {
             echo 'hola no administrador';
