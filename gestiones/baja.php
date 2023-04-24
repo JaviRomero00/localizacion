@@ -26,7 +26,7 @@
         ?>
 
             <h1>Dar de Baja a un trabajador</h1>
-            <form action="alta.php" method="POST">
+            <form action="baja.php" method="POST">
                 <label for="dni">Introduzca el DNI del trabajador al que debes dar de baja:</label>
                 <input type="text" name="dni" required>
                 <br>

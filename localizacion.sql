@@ -22,16 +22,9 @@ CREATE TABLE trabajadores (
     cp          char(5)         NOT NULL,
     puesto      varchar(255)    NOT NULL,
     plaza       varchar(255)    NOT NULL,
-    controlador boolean         NOT NULL
+    controlador bool            NOT NULL
 );
 
-CREATE FUNCTION check_trabajadores_controlador_exists(id BIGINT, controlador BOOLEAN) RETURNS BOOLEAN AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM trabajadores WHERE id = $1 AND controlador = $2
-    );
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE TABLE incidencias (
     trabajador_id   bigserial       NOT NULL REFERENCES trabajadores (id),
@@ -40,10 +33,7 @@ CREATE TABLE incidencias (
     controlador_id  bigserial       NOT NULL REFERENCES trabajadores (id),
     longitud        float           NOT NULL,
     latitud         float           NOT NULL,
-    produccion      varchar(255)    NOT NULL,
-    CONSTRAINT trabajadores_controlador_check CHECK (
-        check_trabajadores_controlador_exists(trabajador_id::BIGINT, true::BOOLEAN)
-    )
+    produccion      varchar(255)    NOT NULL
 );
 
 INSERT INTO usuarios (usuario, contrasena, rol)
@@ -51,3 +41,8 @@ INSERT INTO usuarios (usuario, contrasena, rol)
 
 INSERT INTO usuarios (usuario, contrasena, rol)
      VALUES (md5('normal'), md5('normal'), 'normal');
+
+INSERT INTO trabajadores (dni, nombre, apellidos, direccion,
+poblacion, provincia, cp, puesto, plaza, controlador)
+    VALUES ('43215678M', 'NoControlador', 'NoES', 'Calle Falsa 1234', 'Ciudad Falsa',
+    'Falsa', '11540', 'Puesto falso', 'Jefe Falso', false);

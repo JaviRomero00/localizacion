@@ -6,6 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultar trabajador</title>
+    <style>
+        table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+    </style>
 </head>
 <body>
     <div class="formulario">
@@ -53,7 +71,7 @@
                             . "</td><td>" . $fila['apellidos'] . "</td><td>" . $fila['direccion']
                             . "</td><td>" . $fila['poblacion'] . "</td><td>" . $fila['provincia']
                             . "</td><td>" . $fila['cp'] . "</td><td>" . $fila['puesto']
-                            . "</td><td>" . $fila['plaza'] . $fila['controlador'] . "</td></tr>";
+                            . "</td><td>" . $fila['plaza'] . "</td><td>" . $fila['controlador'] . "</td></tr>";
                         }
                         echo "</table>";
                     }

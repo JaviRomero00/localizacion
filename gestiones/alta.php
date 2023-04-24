@@ -116,10 +116,10 @@
 
                         if ($_POST['controlador'] == 'si') {
                             $controlador = true;
-                        } else if ($_POST['controlador'] == 'no') {
+                        } else if ($_POST['controlador2'] == 'no') {
                             $controlador = false;
                         } else {
-                            $error['controlador'][] = "Debes marcar una opción valida.";
+                            $error['controlador'][] = "Debe marcar alguna de las opciones.";
                         }
 
                         $vacio = true;
@@ -138,6 +138,7 @@
                                         '$poblacion', '$provincia', '$cp', '$puesto', '$plaza',
                                         '$controlador') RETURNING id;";
                             pg_query($con, $registrar);
+                            echo pg_last_error($con);
                             echo 'registrado con exito';
                         }
                     }
@@ -211,8 +212,11 @@
                 <br>
 
                 <label for="controlador" class="<?= $clases_label['controlador'] ?>">CONTROLADOR:</label>
-                <input type="radio" name="controlador" value="si" id="controlador" class="<?= $clases_input['controlador'] ?>"> Sí
-                <input type="radio" name="controlador" value="no" id="controlador" class="<?= $clases_input['controlador'] ?>"> No
+                <input type="radio" name="controlador" value="si" id="controlador-si" class="<?= $clases_input['controlador'] ?>"> Sí
+                </label>
+                <label for="controlador2" class="<?= $clases_label['controlador'] ?>">
+                <input type="radio" name="controlador" value="no" id="controlador-no" class="<?= $clases_input['controlador'] ?>"> No
+                </label>
                 <?php foreach ($error['controlador'] as $err): ?>
                     <p><span>Error!! <?= $err ?></p>
                 <?php endforeach ?>
