@@ -8,7 +8,8 @@ CREATE TABLE usuarios (
     id          bigserial   PRIMARY KEY,
     usuario     varchar(255) NOT NULL UNIQUE,
     contrasena  varchar(255) NOT NULL,
-    rol         varchar(255) NOT NULL
+    rol         varchar(255) NOT NULL,
+    dni_usuario char(9)      NOT NULL REFERENCES trabajadores (dni)
 );
 
 CREATE TABLE trabajadores (
@@ -36,13 +37,18 @@ CREATE TABLE incidencias (
     produccion      varchar(255)    NOT NULL
 );
 
-INSERT INTO usuarios (usuario, contrasena, rol)
-     VALUES (md5('javi'), md5('javi'), 'admin');
+INSERT INTO usuarios (usuario, contrasena, rol, dni_usuario)
+     VALUES (md5('javi'), md5('javi'), 'admin', '87651234N');
 
-INSERT INTO usuarios (usuario, contrasena, rol)
-     VALUES (md5('normal'), md5('normal'), 'normal');
+INSERT INTO usuarios (usuario, contrasena, rol, dni_usuario)
+     VALUES (md5('normal'), md5('normal'), 'normal', '43215678M');
 
 INSERT INTO trabajadores (dni, nombre, apellidos, direccion,
 poblacion, provincia, cp, puesto, plaza, controlador)
     VALUES ('43215678M', 'NoControlador', 'NoES', 'Calle Falsa 1234', 'Ciudad Falsa',
     'Falsa', '11540', 'Puesto falso', 'Jefe Falso', false);
+
+INSERT INTO trabajadores (dni, nombre, apellidos, direccion,
+poblacion, provincia, cp, puesto, plaza, controlador)
+    VALUES ('87651234N', 'Controlador', 'ES', 'Calle Falsa 4321', 'Ciudad Falsa',
+    'Falsa', '11540', 'Puesto falso', 'Asistente', true);
